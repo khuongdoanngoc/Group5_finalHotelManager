@@ -94,7 +94,7 @@ void removeEmp(Employee emp[])
         cout << "\n\tNot Found!" << endl;
     } else {
         for (int i = index; i < 49; i++) {
-            swap(emp[i], emp[i+1]);
+            emp[i] = emp[i+1];
         }
     }
 }
