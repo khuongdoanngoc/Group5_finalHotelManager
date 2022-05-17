@@ -3,16 +3,6 @@
 #include "RoomStatus.h"
 #include "Employee.h"
 
-bool mainLogin(Login user[], string inputUser, string inputPassword)
-{
-    for (int i = 0; i < 50; i++) {
-        if (inputUser == user[i].userName && inputPassword == user[i].password) {
-            return true;
-        }
-    }
-    return false;
-}
-
 int homePage()
 {
     cout << "\t\t--HOME PAGE--" << endl;
@@ -20,9 +10,10 @@ int homePage()
     do {
         cout << "1. Login" << endl;
         cout << "2. Register" << endl;
+        cout << "3. Exit" << endl;
         cout << "\tEnter (1 or 2): ";
         cin >> choose;
-    } while (choose != 1 && choose != 2);
+    } while (choose != 1 && choose != 2 && choose != 3);
     return choose;
 }
 
@@ -49,71 +40,22 @@ int empMenu()
         cout << "1. Add new employee" << endl;
         cout << "2. Search employee by ID" << endl;
         cout << "3. Remove employee by ID" << endl;
-        cout << "4. View salary" << endl;
-        cout << "5. Back to Home Page" << endl;
+        cout << "4. Show all employee" << endl;
+        cout << "5. View salary" << endl;
+        cout << "6. Back to Home Page" << endl;
         cout << "\t Choose: ";
         cin >> choose;
-        if (choose < 1 || choose > 5) isInvalid = true;
+        if (choose < 1 || choose > 6) isInvalid = true;
         else isInvalid = false;
     } while (isInvalid);
     return choose;
 }
 
-void searchEmp(Employee emp[])
-{
-    string inputEmpID;
-    int index = -1;
-    cout << "Enter empID to search: ";
-    cin.ignore();
-    getline(cin, inputEmpID);
-    for (int i = 0; i < 50; i++) {
-        if (inputEmpID == emp[i].empID) {
-            index = i;
-        }
-    }
-    if (index == -1) {
-        cout << "\n\tNot Found!" << endl;
-    } else {
-        cout << "-> Employee[ name=" << emp[index].name << ", age=" << emp[index].age << ", KPI=" << emp[index].KPI << " ]" << endl;
-    }
-}
-
-void removeEmp(Employee emp[])
-{
-    string inputEmpID;
-    int index = -1;
-    cout << "Enter empID to remove: ";
-    cin.ignore();
-    getline(cin, inputEmpID);
-    for (int i = 0; i < 50; i++) {
-        if (inputEmpID == emp[i].empID) {
-            index = i;
-        }
-    }
-    if (index == -1) {
-        cout << "\n\tNot Found!" << endl;
-    } else {
-        for (int i = index; i < 49; i++) {
-            emp[i] = emp[i+1];
-        }
-    }
-}
-
-void viewSalary(Employee emp[])
-{
-    for (int i = 0; i < 50; i++) {
-        if (emp[i].name.empty() == false) {
-            cout << "Employee[" << i+1 << "]: name=" << emp[i].name << " Salary=$" << emp[i].KPI*emp[i].salary << endl;
-        }
-    }
-}
-
 int main()
 {
-    Login user[50];
+    Login user;
     RoomStatus room[50];
-    Employee employee[50];
-    int index = 0;
+    Employee employee;
     int loop = 0;
     while (loop == 0) {
         switch (homePage()) {
@@ -121,30 +63,11 @@ int main()
             // Login
             case 1:
             {
-                string inputUser;
-                string inputPassword;
-                bool isStop = false;
-                cout << "Enter user: ";
-                cin >> inputUser;
-                cout << "Enter password: ";
-                cin >> inputPassword;
-                while (mainLogin(user, inputUser, inputPassword) == false) {
-                    cout << "\n\tWrong username or password!" << endl;
-                    cout << "\tExit to home page (Y or N): ";
-                    char exit;
-                    cin >> exit;
-                    if (exit == 'Y') {
-                        isStop = true;
-                        break;
-                    }
-                    cout << "\nEnter username: ";
-                    cin >> inputUser;
-                    cout << "Enter password: ";
-                    cin >> inputPassword;
-                }
-                cout << "\t\t--Login Succeed--" << endl;
-                if (!isStop) {
-                    loop = 1;
+                if (user.loginAcount()) {
+                    cout << "\t\t--Login Succeed--" << endl;
+                    loop  = 1;
+                } else {
+                    cout << "\t\t--Login Fail--" << endl;
                 }
                 break;
             }
@@ -152,9 +75,11 @@ int main()
             // Register
             case 2:
             {
-                user[index++].registerAcount();
+                user.registerAcount();
                 break;
             }
+            case 3:
+                return 0;
             default:
                 cout << "Invalid" << endl;
                 break;
@@ -172,7 +97,7 @@ int main()
                 cin >> num;
                 for (int i = 0; i < num; i++) {
                     room[i].input();
-                    cout << "Price room[" << i + 1 << "] = " << room[i].bill() << endl;
+                    cout << "Price room[" << i + 1 << "] = $" << room[i].bill() << endl;
                 }
                 break;
             }
@@ -191,7 +116,7 @@ int main()
                             cin >> num;
                             for (int i = 0; i < num; i++) {
                                 cout << "Enter employee[" << i+1 << "] : " << endl;
-                                employee[i].addEmployee();
+                                employee.addEmployee();
                             }
                             break;
                         }
@@ -199,24 +124,38 @@ int main()
                             // search Employee by ID
                         case 2:
                         {
-                            searchEmp(employee);
+                            string inputID;
+                            cout << "Enter empID to search: ";
+                            cin.ignore();
+                            getline(cin, inputID);
+                            employee.searchEmployeeByID(inputID);
                             break;
                         }
                             
                             // remove Employee by ID
                         case 3:
                         {
-                            removeEmp(employee);
+                            string inputID;
+                            cout << "Enter empID to remove: ";
+                            cin.ignore();
+                            getline(cin, inputID);
+                            employee.removeEmployeeByID(inputID);
                             break;
                         }
                             
-                            // view Salary
+                            // show emp
                         case 4:
                         {
-                            viewSalary(employee);
+                            employee.showAllEmployee();
                             break;
                         }
+                            // view salary
                         case 5:
+                        {
+                            employee.viewSalary();
+                            break;
+                        }
+                        case 6:
                         {
                             loopEmp = 2;
                             break;
