@@ -1,17 +1,12 @@
 #include "Header.h"
 #include "DataUser.h"
 
-class User
+
+class Login
 {
 public:
     string userName;
     string password;
-    
-};
-
-class Login:public User
-{
-public:
     void registerAcount();
     bool loginAcount();
 };
