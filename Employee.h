@@ -40,7 +40,7 @@ void Employee::removeEmployeeByID(string inputEmpID)
     for (int i = 0; i < 50; i++)
     {
         if (inputEmpID == dataEmp.getEmpID[i]) {
-            dataEmp.deleteLine("/Users/macbook/Desktop/dataEmp.txt", i+1);
+            dataEmp.deleteLine("dataEmp.txt", i+1);
         }
     }
 }
