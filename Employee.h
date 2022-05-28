@@ -80,4 +80,3 @@ void Employee::viewSalary()
     }
 }
 
-
