@@ -27,7 +27,6 @@ void Employee::addEmployee()
     getline(cin, this->empID);
     cout << "Enter name: ";
     getline(cin, this->name);
-    cout << this->name;
     cout << "Enter age: ";
     cin >> this->age;
     cout << "Enter KPI: ";
